@@ -1,0 +1,49 @@
+{
+  "name": "nefco-extranet",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "sls offline start",
+    "start:standalone": "npm run build && npm run serve",
+    "serve": "node --max_old_space_size=8048 ./build/daemon",
+    "prebuild": "rm -rf ./build",
+    "build": "tsc --project tsconfig.json",
+    "lint": "npx eslint --ext .js,.jsx,.ts,.tsx ./",
+    "test": "jest --verbose --silent"
+  },
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm lint",
+      "pre-push": "npm test"
+    }
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.954.0",
+    "dotenv": "^8.2.0",
+    "ebml": "^3.0.0",
+    "matroska": "^2.2.3",
+    "mysql": "^2.18.1",
+    "rxjs": "^6.6.3",
+    "ts-ebml": "^2.0.2",
+    "winston": "^3.3.3",
+    "winston-cloudwatch": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/mysql": "^2.15.19",
+    "@types/node": "^12.12.58",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.29.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-import": "^2.21.2",
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
+    "serverless-offline": "^7.0.0",
+    "serverless-plugin-optimize": "^4.2.1-rc.1",
+    "serverless-plugin-typescript": "^1.1.5",
+    "ts-jest": "^27.0.4",
+    "ts-node": "^10.2.0",
+    "typescript": "~4.0.3"
+  }
+}

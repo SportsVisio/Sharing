@@ -1,0 +1,22 @@
+image: node:12-alpine
+definitions:
+  steps:
+    - step: &deploy-serverless
+        name: "Deploy Serverless Stack"
+        caches:
+          - node
+        script:
+          - npm install -g serverless typescript node-pre-gyp
+          - npm install
+          - serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
+          - serverless deploy --stage ${BITBUCKET_DEPLOYMENT_ENVIRONMENT}
+pipelines:
+  branches:
+    master-dev:
+      - step: 
+          <<: *deploy-serverless
+          deployment: dev    
+    master-qa:
+      - step: 
+          <<: *deploy-serverless
+          deployment: qa

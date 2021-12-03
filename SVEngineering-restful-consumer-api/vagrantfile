@@ -1,0 +1,39 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+required_plugins = %w( vagrant-fsnotify vagrant-notify-forwarder vagrant-vbguest )
+required_plugins.each do |plugin|
+   system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+end
+
+Vagrant.configure("2") do |config|
+
+    config.vagrant.plugins = ["vagrant-notify-forwarder"]
+
+    config.vm.box = "bento/ubuntu-16.04"
+    #config.vm.network :public_network
+    config.vm.network "private_network", ip: "192.168.60.12"
+    config.vm.hostname = "sportsvisio-restful-consumer-api"
+
+    # Serverless API
+    config.vm.network "forwarded_port", guest: 3000, host: 3000
+
+    # DynamoDB
+    config.vm.network "forwarded_port", guest: 8000, host: 8000
+
+    # MySQL
+    config.vm.network "forwarded_port", guest: 3306, host: 3306
+
+    # NFS mount the shared folder (only necessary if fs-notify does not work for hot-reloading)
+    config.vm.synced_folder ".", "/var/www", :nfs => { :mount_options => ["dmode=777","fmode=666"] }
+
+    # Standard file mount
+    #config.vm.synced_folder ".", "/var/www", :mount_options => ["dmode=777", "fmode=666"], fsnotify: true
+
+    config.vm.provision :shell, privileged: false, :path => "provision.sh"
+
+    config.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--audio", "none"]
+      v.memory = 8192
+      v.cpus = 4
+    end
+end

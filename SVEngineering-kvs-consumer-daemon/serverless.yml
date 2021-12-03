@@ -1,0 +1,71 @@
+service: kvs-consumer-daemon
+useDotenv: true
+plugins:
+ - serverless-plugin-typescript
+ - serverless-plugin-optimize
+ - serverless-offline
+
+custom:
+  serverless-offline:
+    host: 0.0.0.0       # localhost will not work in Vagrant, so bind to 0.0.0.0
+    port: 3000          # default
+    lambdaPort: 3001          # default
+    endpoint: http://0.0.0.0:3001
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: "20201221"
+  region: "us-east-1"
+  tracing:
+    lambda: true
+  vpc:
+    securityGroupIds:
+      - sg-024df3bb2597c0fe0
+    subnetIds:
+      - subnet-a1cb89c7
+      - subnet-c2f968f3
+      - subnet-2beea174
+      - subnet-248b8f2a
+      - subnet-995f17b8
+      - subnet-c2a7b58f
+  environment:
+    DB_USER: ${env:DB_USER}
+    DB_PASS: ${env:DB_PASS}
+    DB_ENDPOINT: ${env:DB_ENDPOINT}
+    GLOBAL_DB_USER: ${env:GLOBAL_DB_USER}
+    GLOBAL_DB_PASS: ${env:GLOBAL_DB_PASS}
+    GLOBAL_DB_ENDPOINT: ${env:GLOBAL_DB_ENDPOINT}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - logs:*
+      Resource: "*"
+    - Effect: "Allow"
+      Resource: "*"
+      Action:
+        - "kinesisvideo:*"
+    - Effect: "Allow"
+      Resource: "*"
+      Action:
+        - "dynamodb:*"
+    - Effect: "Allow"
+      Resource: "*"
+      Action:
+        - "lambda:*"
+package:
+  individually: true
+  excludeDevDependencies: true
+
+functions:
+ main: # The name of the lambda function
+   handler: lambda.handler
+   events:
+     - http:
+         method: post
+         path: /process
+resources:

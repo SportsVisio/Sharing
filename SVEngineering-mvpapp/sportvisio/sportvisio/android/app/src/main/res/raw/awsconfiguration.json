@@ -1,0 +1,21 @@
+{
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "us-east-1:e49ffe9c-e3bc-4b4f-86b3-7b4d0a04e28e",
+        "Region": "us-east-1"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "CognitoUserPool": {
+    "Default": {
+      "AppClientId": "3ufu0d3dvoi8ri4gva0mpgvprg",
+      "PoolId": "us-east-1_66HUKi0kQ",
+      "Region": "us-east-1"
+    }
+  }
+}

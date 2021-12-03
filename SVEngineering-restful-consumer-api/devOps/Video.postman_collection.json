@@ -1,0 +1,93 @@
+{
+	"info": {
+		"_postman_id": "68e61937-1135-4684-9ed3-6a2811d8ff8d",
+		"name": "Video",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Full Video Url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/video/full/vmx-7000",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"video",
+						"full",
+						"vmx-7000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get HLS Url (Live Playback)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/video/hls/sportsVisio",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"video",
+						"hls",
+						"sportsVisio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Highlights",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/video/highlights/vmx-7000/shot1",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"video",
+						"highlights",
+						"vmx-7000",
+						"shot1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "https://3m80zdhcf0.execute-api.us-east-1.amazonaws.com/dev"
+		}
+	]
+}

@@ -1,0 +1,58 @@
+PODS:
+  - AWSAuthCore (2.24.2):
+    - AWSCore (= 2.24.2)
+  - AWSCognitoIdentityProvider (2.24.2):
+    - AWSCognitoIdentityProviderASF (= 2.24.2)
+    - AWSCore (= 2.24.2)
+  - AWSCognitoIdentityProviderASF (2.24.2)
+  - AWSCore (2.24.2)
+  - AWSKinesisVideo (2.24.2):
+    - AWSCore (= 2.24.2)
+  - AWSKinesisVideoSignaling (2.24.2):
+    - AWSCore (= 2.24.2)
+  - AWSMobileClient (2.24.2):
+    - AWSAuthCore (= 2.24.2)
+    - AWSCognitoIdentityProvider (= 2.24.2)
+    - AWSCognitoIdentityProviderASF (= 2.24.2)
+    - AWSCore (= 2.24.2)
+  - CommonCryptoModule (1.0.2)
+  - GoogleWebRTC (1.1.31999)
+  - Starscream (3.1.1)
+
+DEPENDENCIES:
+  - AWSCognitoIdentityProvider
+  - AWSKinesisVideo
+  - AWSKinesisVideoSignaling
+  - AWSMobileClient
+  - CommonCryptoModule
+  - GoogleWebRTC (~> 1.1)
+  - Starscream (~> 3.0)
+
+SPEC REPOS:
+  trunk:
+    - AWSAuthCore
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSKinesisVideo
+    - AWSKinesisVideoSignaling
+    - AWSMobileClient
+    - CommonCryptoModule
+    - GoogleWebRTC
+    - Starscream
+
+SPEC CHECKSUMS:
+  AWSAuthCore: d2cb921db598ea03d67284977a3c691e9a1aee83
+  AWSCognitoIdentityProvider: f9d68c563718fa5aa76e077752df06c73810efba
+  AWSCognitoIdentityProviderASF: 21681469334e286df6e5470f3cbab3b10edbf818
+  AWSCore: 08a61ac2b1d98b2d43f59ee40c4bd68e58dfdea3
+  AWSKinesisVideo: 180da7ec563c44964b787c92fb07221b74c193eb
+  AWSKinesisVideoSignaling: b52c7cb2fb9af3f855fefff434af6e5bfee62127
+  AWSMobileClient: 6af7fff9e58f8d427acf3381cbbae2f0c34d52ab
+  CommonCryptoModule: 63a68b57abed79655b3a01011419bf037a05b0a0
+  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+
+PODFILE CHECKSUM: cfdf7eab96fdee077722a067437f67ed84ac4fb9
+
+COCOAPODS: 1.10.1

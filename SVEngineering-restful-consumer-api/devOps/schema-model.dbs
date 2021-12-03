@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SportsVisio" id="Project_11cb" database="MySql" >
+	<schema name="sportsvisio" >
+		<table name="_migrations" row_count="4" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="timestamp" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<index name="pk__migrations" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="account" row_count="4" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="inactive" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="ownerId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_account" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="REL_72719f338bfbe9aa98f4439d2b" unique="UNIQUE_KEY" >
+				<column name="ownerId" />
+			</index>
+			<index name="IDX_dec9eb6082099cc8dd4dfe3be1" unique="NORMAL" >
+				<column name="inactive" />
+			</index>
+			<fk name="FK_72719f338bfbe9aa98f4439d2b4" to_schema="sportsvisio" to_table="user" delete_action="restrict" update_action="restrict" >
+				<fk_column name="ownerId" pk="id" />
+			</fk>
+		</table>
+		<table name="account_member_role" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="role" type="enum" length="11" decimal="0" jt="12" mandatory="y" >
+				<enumeration><![CDATA['owner','leagueAdmin','teamAdmin']]></enumeration>
+			</column>
+			<column name="accountMemberAssnId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_account_member_role" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_0020407962644b7415fbed175a8" unique="NORMAL" >
+				<column name="accountMemberAssnId" />
+			</index>
+			<fk name="FK_0020407962644b7415fbed175a8" to_schema="sportsvisio" to_table="account_member_role_assn" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountMemberAssnId" pk="id" />
+			</fk>
+		</table>
+		<table name="account_member_role_assn" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="accepted" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="userId" type="char" length="36" decimal="0" jt="1" />
+			<column name="accountId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_account_member_role_assn" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_62b94888173f68c7b3817fa0c6d" unique="NORMAL" >
+				<column name="userId" />
+			</index>
+			<index name="FK_e9f6d40ab609116f9ecc69ac8d9" unique="NORMAL" >
+				<column name="accountId" />
+			</index>
+			<fk name="FK_e9f6d40ab609116f9ecc69ac8d9" to_schema="sportsvisio" to_table="account" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountId" pk="id" />
+			</fk>
+			<fk name="FK_62b94888173f68c7b3817fa0c6d" to_schema="sportsvisio" to_table="user" delete_action="restrict" update_action="restrict" >
+				<fk_column name="userId" pk="id" />
+			</fk>
+		</table>
+		<table name="arena" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<index name="pk_arena" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="court" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="arenaId" type="char" length="36" decimal="0" jt="1" />
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<index name="pk_court" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_ab7da24329f728b00b997a4a581" unique="NORMAL" >
+				<column name="arenaId" />
+			</index>
+			<fk name="FK_ab7da24329f728b00b997a4a581" to_schema="sportsvisio" to_table="arena" delete_action="restrict" update_action="restrict" >
+				<fk_column name="arenaId" pk="id" />
+			</fk>
+		</table>
+		<table name="device" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<column name="deviceId" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="accountId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_device" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="IDX_6fe2df6e1c34fc6c18c786ca26" unique="UNIQUE_KEY" >
+				<column name="deviceId" />
+			</index>
+			<index name="FK_d66b825375117d90ae0015fe8d0" unique="NORMAL" >
+				<column name="accountId" />
+			</index>
+			<fk name="fk_d66b825375117d90ae0015fe8d0_0" to_schema="sportsvisio" to_table="account" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountId" pk="id" />
+			</fk>
+		</table>
+		<table name="device_scheduled_game_assn" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<column name="videoId" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="isActive" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="startTime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="endTime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="gameId" type="char" length="36" decimal="0" jt="1" />
+			<column name="deviceId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_device_scheduled_game_assn" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="IDX_f1ac17fcbcf7af329cf0442968" unique="UNIQUE_KEY" >
+				<column name="videoId" />
+			</index>
+			<index name="FK_95754cdc93808980a2241c2fe52" unique="NORMAL" >
+				<column name="deviceId" />
+			</index>
+			<index name="FK_e0eb5e7a3c112391acd38fe019f" unique="NORMAL" >
+				<column name="gameId" />
+			</index>
+			<fk name="fk_95754cdc93808980a2241c2fe52_0" to_schema="sportsvisio" to_table="device" delete_action="restrict" update_action="restrict" >
+				<fk_column name="deviceId" pk="id" />
+			</fk>
+			<fk name="fk_e0eb5e7a3c112391acd38fe019f_0" to_schema="sportsvisio" to_table="scheduled_game" delete_action="restrict" update_action="restrict" >
+				<fk_column name="gameId" pk="id" />
+			</fk>
+		</table>
+		<table name="device_stream" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<column name="streamName" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="deviceId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_device_stream" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="REL_1942d73015198cc6fc02acfc4a" unique="UNIQUE_KEY" >
+				<column name="deviceId" />
+			</index>
+			<fk name="FK_1942d73015198cc6fc02acfc4ae" to_schema="sportsvisio" to_table="device" delete_action="restrict" update_action="restrict" >
+				<fk_column name="deviceId" pk="id" />
+			</fk>
+		</table>
+		<table name="league" row_count="4" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="accountId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_league" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_f1afcc358dab73fb9d45c544fc0" unique="NORMAL" >
+				<column name="accountId" />
+			</index>
+			<fk name="FK_f1afcc358dab73fb9d45c544fc0" to_schema="sportsvisio" to_table="account" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountId" pk="id" />
+			</fk>
+		</table>
+		<table name="league_teams_team" row_count="8" >
+			<column name="leagueId" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="teamId" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<index name="pk_league_teams_team" unique="PRIMARY_KEY" >
+				<column name="leagueId" />
+				<column name="teamId" />
+			</index>
+			<index name="IDX_910702d60f0094c6d3680a0e54" unique="NORMAL" >
+				<column name="teamId" />
+			</index>
+			<index name="IDX_95997e6c6c07a121f7b4430b1d" unique="NORMAL" >
+				<column name="leagueId" />
+			</index>
+			<fk name="FK_95997e6c6c07a121f7b4430b1d9" to_schema="sportsvisio" to_table="league" delete_action="cascade" update_action="cascade" >
+				<fk_column name="leagueId" pk="id" />
+			</fk>
+			<fk name="FK_910702d60f0094c6d3680a0e544" to_schema="sportsvisio" to_table="team" delete_action="restrict" update_action="restrict" >
+				<fk_column name="teamId" pk="id" />
+			</fk>
+		</table>
+		<table name="player" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="number" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<index name="pk_player" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="scheduled_game" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="description" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="leagueId" type="char" length="36" decimal="0" jt="1" />
+			<column name="courtId" type="char" length="36" decimal="0" jt="1" />
+			<column name="accountId" type="char" length="36" decimal="0" jt="1" />
+			<column name="startTime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="endTime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_scheduled_game" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="REL_7f246fc7d8423b2fbc5ec5ca01" unique="UNIQUE_KEY" >
+				<column name="courtId" />
+			</index>
+			<index name="REL_9e714f7c100febba4c41396489" unique="UNIQUE_KEY" >
+				<column name="leagueId" />
+			</index>
+			<index name="FK_1d32ccaf1b8523ee7f0e0cd5d1e" unique="NORMAL" >
+				<column name="accountId" />
+			</index>
+			<fk name="FK_7f246fc7d8423b2fbc5ec5ca015" to_schema="sportsvisio" to_table="court" delete_action="restrict" update_action="restrict" >
+				<fk_column name="courtId" pk="id" />
+			</fk>
+			<fk name="FK_9e714f7c100febba4c41396489d" to_schema="sportsvisio" to_table="league" delete_action="restrict" update_action="restrict" >
+				<fk_column name="leagueId" pk="id" />
+			</fk>
+			<fk name="FK_1d32ccaf1b8523ee7f0e0cd5d1e" to_schema="sportsvisio" to_table="account" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountId" pk="id" />
+			</fk>
+		</table>
+		<table name="seed" row_count="1" >
+			<column name="file" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_seed" unique="PRIMARY_KEY" >
+				<column name="file" />
+			</index>
+		</table>
+		<table name="team" row_count="8" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="accountId" type="char" length="36" decimal="0" jt="1" />
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<index name="pk_team" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_811aba5f3d476db71e160be3d79" unique="NORMAL" >
+				<column name="accountId" />
+			</index>
+			<fk name="FK_811aba5f3d476db71e160be3d79" to_schema="sportsvisio" to_table="account" delete_action="restrict" update_action="restrict" >
+				<fk_column name="accountId" pk="id" />
+			</fk>
+		</table>
+		<table name="team_players_player" row_count="0" >
+			<column name="teamId" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="playerId" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<index name="pk_team_players_player" unique="PRIMARY_KEY" >
+				<column name="teamId" />
+				<column name="playerId" />
+			</index>
+			<index name="IDX_03530e45522b82c6ae46d825dd" unique="NORMAL" >
+				<column name="teamId" />
+			</index>
+			<index name="IDX_a5a5ca467eb43bf810ce32a119" unique="NORMAL" >
+				<column name="playerId" />
+			</index>
+			<fk name="FK_a5a5ca467eb43bf810ce32a119d" to_schema="sportsvisio" to_table="player" delete_action="restrict" update_action="restrict" >
+				<fk_column name="playerId" pk="id" />
+			</fk>
+			<fk name="FK_03530e45522b82c6ae46d825dd1" to_schema="sportsvisio" to_table="team" delete_action="cascade" update_action="cascade" >
+				<fk_column name="teamId" pk="id" />
+			</fk>
+		</table>
+		<table name="team_scheduled_game_assn" row_count="0" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="designation" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="teamId" type="char" length="36" decimal="0" jt="1" />
+			<column name="gameId" type="char" length="36" decimal="0" jt="1" />
+			<index name="pk_team_scheduled_game_assn" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="FK_0205e68d3659525855e3eb2e2ff" unique="NORMAL" >
+				<column name="gameId" />
+			</index>
+			<index name="FK_21a94728279ab65c5c9d502e58e" unique="NORMAL" >
+				<column name="teamId" />
+			</index>
+			<fk name="FK_0205e68d3659525855e3eb2e2ff" to_schema="sportsvisio" to_table="scheduled_game" delete_action="restrict" update_action="restrict" >
+				<fk_column name="gameId" pk="id" />
+			</fk>
+			<fk name="FK_21a94728279ab65c5c9d502e58e" to_schema="sportsvisio" to_table="team" delete_action="restrict" update_action="restrict" >
+				<fk_column name="teamId" pk="id" />
+			</fk>
+		</table>
+		<table name="user" row_count="4" >
+			<column name="id" type="char" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="createdAt" type="datetime" decimal="0" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="updatedAt" type="timestamp" decimal="0" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="firstName" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="lastName" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="email" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="password" type="varchar" length="255" decimal="0" jt="12" />
+			<column name="passwordSalt" type="varchar" length="255" decimal="0" jt="12" />
+			<column name="inactive" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="deletedAt" type="datetime" length="6" decimal="0" jt="93" />
+			<index name="pk_user" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="IDX_e12875dfb3b1d92d7d7c5377e2" unique="UNIQUE_KEY" >
+				<column name="email" />
+			</index>
+		</table>
+	</schema>
+	<connector name="SportsVisio" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.23.jar" driver_desc="Standard" host="localhost" port="3306" instance="sportsvisio" user="root" passwd="cm9vdA==" sshEnable="true" sshHost="192.168.60.12" sshPort="22" sshUser="vagrant" sshUseKey="true" sshPrivateKey="/Users/switch/Code/SportsVisio/NodeJs/restful-consumer-api/.vagrant/machines/default/virtualbox/private_key" />
+	<layout name="Layout with Tools" id="Layout_1047" show_column_type="y" show_relation="columns" >
+		<entity schema="sportsvisio" name="_migrations" color="BED3F4" x="1392" y="784" />
+		<entity schema="sportsvisio" name="account" color="F4DDBE" x="1408" y="368" />
+		<entity schema="sportsvisio" name="account_member_role" color="F4DDBE" x="1696" y="64" />
+		<entity schema="sportsvisio" name="account_member_role_assn" color="F4DDBE" x="1712" y="336" />
+		<entity schema="sportsvisio" name="arena" color="C7F4BE" x="48" y="96" />
+		<entity schema="sportsvisio" name="court" color="C7F4BE" x="320" y="96" />
+		<entity schema="sportsvisio" name="device" color="3986C1" x="432" y="672" />
+		<entity schema="sportsvisio" name="device_scheduled_game_assn" color="3986C1" x="320" y="352" />
+		<entity schema="sportsvisio" name="device_stream" color="3986C1" x="96" y="656" />
+		<entity schema="sportsvisio" name="league" color="C7F4BE" x="1072" y="48" />
+		<entity schema="sportsvisio" name="league_teams_team" color="C7F4BE" x="896" y="256" />
+		<entity schema="sportsvisio" name="player" color="C7F4BE" x="1104" y="544" />
+		<entity schema="sportsvisio" name="scheduled_game" color="C7F4BE" x="608" y="48" />
+		<entity schema="sportsvisio" name="seed" color="BED3F4" x="1408" y="896" />
+		<entity schema="sportsvisio" name="team" color="C7F4BE" x="1088" y="368" />
+		<entity schema="sportsvisio" name="team_players_player" color="C7F4BE" x="832" y="544" />
+		<entity schema="sportsvisio" name="team_scheduled_game_assn" color="C7F4BE" x="624" y="368" />
+		<entity schema="sportsvisio" name="user" color="F4DDBE" x="1392" y="48" />
+		<script name="Sample SQL Editor" id="Editor_2c9" language="SQL" >
+			<string><![CDATA[SELECT id, `createdAt`, `updatedAt`, inactive, `ownerId`
+FROM
+	sportsvisio.account t;]]></string>
+		</script>
+		<browser id="Browse_1c2a" name="Sample Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="sportsvisio" entity="account" x="20" y="20" width="400" height="300" >
+				<browse_table schema="sportsvisio" entity="team" fk="FK_811aba5f3d476db71e160be3d79" x="440" y="20" width="500" height="350" >
+					<browse_table schema="sportsvisio" entity="team_players_player" fk="FK_03530e45522b82c6ae46d825dd1" x="960" y="20" width="500" height="350" />
+				</browse_table>
+			</browse_table>
+		</browser>
+		<query id="Query_950" name="Sample Query Builder" >
+			<query_table schema="sportsvisio" name="account" alias="a" x="48" y="48" >
+				<column name="id" />
+				<column name="createdAt" />
+				<column name="updatedAt" />
+				<column name="inactive" />
+				<column name="ownerId" />
+				<query_table schema="sportsvisio" name="team" alias="t" x="208" y="48" fk="FK_811aba5f3d476db71e160be3d79" type="Inner Join" >
+					<column name="id" />
+					<column name="createdAt" />
+					<column name="updatedAt" />
+					<column name="name" />
+					<column name="accountId" />
+					<query_table schema="sportsvisio" name="team_players_player" alias="tpp" x="368" y="48" fk="FK_03530e45522b82c6ae46d825dd1" type="Inner Join" >
+						<column name="teamId" />
+						<column name="playerId" />
+					</query_table>
+				</query_table>
+			</query_table>
+		</query>
+		<form name="Sample Report" id="Report_dfe" template="Page" css="container-fluid" view="frame" >
+			<var name="samplePageNumber" type="4" value="0" mandatory="n" />
+			<var name="sampleRecordsPerPage" type="4" value="100" mandatory="n" />
+			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2,-2,-2,-2,-1},{-2,-2,-2}}" scroll="n" html="n" >
+				<cell type="label" name="sample" template="H3" pos="0,0,1,0,l,c" />
+				<tableview name="sample" template="Table" css="table table-striped table-bordered table-sm table-hover" pos="0,1,4,1,f,f" layout="{{-2,-2,-2,-2,-2},{-2,-2}}" scroll="n" html="n" header_rows="1" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="id" type="1" />
+						<var name="createdAt" type="93" />
+						<var name="updatedAt" type="93" />
+						<var name="inactive" type="-6" />
+						<var name="ownerId" type="1" />
+						<script ><![CDATA[SELECT * FROM sportsvisio.account]]></script>
+					</form_script>
+					<cell type="label" name="id" pos="0,0,0,0,c,c" />
+					<cell type="label" name="createdAt" pos="1,0,1,0,c,c" />
+					<cell type="label" name="updatedAt" pos="2,0,2,0,c,c" />
+					<cell type="label" name="inactive" pos="3,0,3,0,c,c" />
+					<cell type="label" name="ownerId" pos="4,0,4,0,c,c" />
+					<cell type="label" name="${id}" template="Plain" pos="0,1,0,1,l,c" />
+					<cell type="label" name="${createdAt}" template="Plain" pos="1,1,1,1,l,c" />
+					<cell type="label" name="${updatedAt}" template="Plain" pos="2,1,2,1,l,c" />
+					<cell type="label" name="${inactive}" template="Plain" pos="3,1,3,1,l,c" />
+					<cell type="label" name="${ownerId}" template="Plain" pos="4,1,4,1,l,c" />
+				</tableview>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="0,2,0,2,l,c" glyph="FA-ANGLE_DOUBLE_LEFT" ref_id="Report_dfe" >
+					<var name="samplePageNumber" value="0" />
+				</cell>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="1,2,1,2,l,c" glyph="FA-ANGLE_LEFT" ref_id="Report_dfe" >
+					<var name="samplePageNumber" value="${Math.max(0,samplePageNumber-1)}" />
+				</cell>
+				<cell type="label" name="Page ${samplePageNumber+1}" pos="2,2,2,2,l,c" />
+				<cell type="href" name="" disabled="${!sampleHasNextPage}" pos="3,2,3,2,l,c" glyph="FA-ANGLE_RIGHT" ref_id="Report_dfe" >
+					<var name="samplePageNumber" value="${( samplePageNumber+1 )}" />
+				</cell>
+			</body>
+		</form>
+	</layout>
+	<layout name="Main Layout" id="Layout_6c4" show_relation="columns" >
+		<entity schema="sportsvisio" name="_migrations" color="BED3F4" x="1168" y="864" />
+		<entity schema="sportsvisio" name="account" color="F4DDBE" x="1184" y="176" />
+		<entity schema="sportsvisio" name="account_member_role" color="F4DDBE" x="1648" y="176" />
+		<entity schema="sportsvisio" name="account_member_role_assn" color="F4DDBE" x="1376" y="176" />
+		<entity schema="sportsvisio" name="arena" color="C7F4BE" x="912" y="448" />
+		<entity schema="sportsvisio" name="court" color="C7F4BE" x="720" y="448" />
+		<entity schema="sportsvisio" name="league" color="C7F4BE" x="720" y="192" />
+		<entity schema="sportsvisio" name="league_teams_team" color="C7F4BE" x="912" y="192" />
+		<entity schema="sportsvisio" name="player" color="C7F4BE" x="512" y="592" />
+		<entity schema="sportsvisio" name="scheduled_game" color="C7F4BE" x="512" y="192" />
+		<entity schema="sportsvisio" name="seed" color="BED3F4" x="1168" y="1056" />
+		<entity schema="sportsvisio" name="team" color="C7F4BE" x="320" y="192" />
+		<entity schema="sportsvisio" name="team_players_player" color="C7F4BE" x="288" y="416" />
+		<entity schema="sportsvisio" name="team_scheduled_game_assn" color="C7F4BE" x="48" y="176" />
+		<entity schema="sportsvisio" name="user" color="F4DDBE" x="1168" y="400" />
+		<callout x="1184" y="80" pointer="Round" >
+			<comment><![CDATA[Double-click table headers, columns, or foreign keys to edit. 
+Create multiple layouts (diagrams) with the same or different tables. 
+Saving the model to file will also save the layouts.]]></comment>
+		</callout>
+		<group name="_migrations" color="ECF0F7" >
+			<entity schema="sportsvisio" name="_migrations" />
+			<entity schema="sportsvisio" name="seed" />
+		</group>
+		<group name="account" color="F7F2EC" >
+			<entity schema="sportsvisio" name="account" />
+			<entity schema="sportsvisio" name="account_member_role_assn" />
+			<entity schema="sportsvisio" name="user" />
+			<entity schema="sportsvisio" name="account_member_role" />
+		</group>
+		<group name="team" color="EEF7EC" >
+			<entity schema="sportsvisio" name="team" />
+			<entity schema="sportsvisio" name="scheduled_game" />
+			<entity schema="sportsvisio" name="league" />
+			<entity schema="sportsvisio" name="court" />
+			<entity schema="sportsvisio" name="league_teams_team" />
+			<entity schema="sportsvisio" name="team_players_player" />
+			<entity schema="sportsvisio" name="team_scheduled_game_assn" />
+			<entity schema="sportsvisio" name="arena" />
+			<entity schema="sportsvisio" name="player" />
+		</group>
+	</layout>
+</project>

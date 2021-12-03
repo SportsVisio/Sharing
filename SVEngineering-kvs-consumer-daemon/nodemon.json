@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "**/*.ts",
+    "**/*.js"
+  ],
+  "ignore": [
+    ".git",
+    "node_modules/**/*",
+    "dist/**/*",
+    "**/build/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "verbose": false,
+  "ext": "ts",
+  "exec": "npm run start"
+}

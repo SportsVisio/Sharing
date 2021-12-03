@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "testflutterd54075a3": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# If you want to stream using the Docker streamer, put a sample media file in this folder. 
+# All files should be untracked except this one for reference.

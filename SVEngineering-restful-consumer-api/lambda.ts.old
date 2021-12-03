@@ -1,0 +1,52 @@
+import { Handler, Context } from 'aws-lambda';
+import { Server } from 'http';
+import { createServer, proxy } from 'aws-serverless-express';
+import { eventContext } from 'aws-serverless-express/middleware';
+
+import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import { AppModule } from './src/app.module';
+
+import * as express from 'express';
+import { initSwagger } from "./src/swagger";
+
+// NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely
+// due to a compressed response (e.g. gzip) which has not been handled correctly
+// by aws-serverless-express and/or API Gateway. Add the necessary MIME types to
+// binaryMimeTypes below
+const binaryMimeTypes: string[] = [];
+
+let cachedServer: Server;
+
+async function bootstrapServer(stage: string): Promise<Server> {
+  if (!cachedServer) {
+    const expressApp = express();
+    const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
+    nestApp.use(eventContext());
+    
+    // this little set/unset hack was the key to getting deployed Swagger to have the correct "Try it" Url
+    nestApp.setGlobalPrefix(stage || "dev");
+    initSwagger(nestApp);
+    nestApp.setGlobalPrefix("");
+
+    await nestApp.init();
+    
+    cachedServer = createServer(expressApp, null, binaryMimeTypes);
+  }
+
+  return cachedServer;
+}
+
+export const handler: Handler = async (event: any, context: Context) => {
+  // fixes issue w/ Swagger not working when deployed (API Gateway strips slash, causes middleware to get missed)
+  if (event.path === '/swagger') {
+    event.path = '/swagger/';
+  }
+  // when deployed need to alter the URLs for swagger (ugh)
+  if (!event.headers.Host.includes(":3000")) event.path = event.path.includes('swagger-ui') ? `/swagger${event.path}` : event.path;
+
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  cachedServer = await bootstrapServer(event.requestContext?.stage);
+  return proxy(cachedServer, event, context, 'PROMISE').promise;
+};

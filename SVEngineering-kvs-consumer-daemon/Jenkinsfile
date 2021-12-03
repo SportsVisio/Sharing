@@ -1,0 +1,178 @@
+def _segments = env.BRANCH_NAME.split("-");
+def _env = env.BRANCH_NAME == "master" ? "prod" : _segments[_segments.length - 1];
+if (!_env) _env = "dev";
+
+def _distId;
+def _cluster = "${_env}-extranet";
+def _deployUrl = "https://nefco-extranet-ui.atom-${_env}.com";
+def _playgroundUrl = "https://nefco-api.atom-${_env}.com/graphql";
+
+switch(_env) {
+  case "prod":
+    _distId = "";
+    break;
+  case "stage":
+    _distId = "";
+    break;
+  case "qa":
+    _distId = "EA2FBE183GASQ";
+    break;
+  default:
+    _distId = "E1QH7IIRIZHABY";
+}
+
+pipeline{
+  agent any
+  environment {
+    HOME = '.'
+    environment = "$_env"
+    s3_bucket = "${_env}-extranet-cdn"
+    cloudfront_dist_id = "$_distId"
+    ecs_cluster = "$_cluster"
+    ecr_uri = "235811128117.dkr.ecr.us-east-1.amazonaws.com"
+    aws_credential_id = 'nefco-atom-jenkins'
+    aws_region = 'us-east-1'
+    slack_credential_id = "jenkins-atom-slack"
+    slack_channel = "nefco"
+  }
+  stages {
+    stage ('Slack Notify Start') {
+      steps{
+        script{
+          slackSend tokenCredentialId: env.slack_credential_id, color: "good", message: "[${env.BRANCH_NAME.toUpperCase()}] Extranet UI / GraphQL / QBConnector Jenkins Build Started ... Hold on to your assets!", channel: env.slack_channel
+        }
+      }
+    }
+    stage ('Git Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage ('NPM Installation') {
+      steps {
+        sh 'npm install --verbose -d'
+        sh 'npm --prefix api install --verbose -d'
+        sh 'npm --prefix client_dashboard install --verbose -d'
+        sh 'npm --prefix qb install --verbose -d'
+        sh "sudo npm install -g @angular/cli typescript"
+      }
+    }
+    // stage ('Amplify Setup') {
+    //   steps {
+    //     withAWS(credentials: env.aws_credential_id, region: env.aws_region) {
+    //       script {
+    //         // Amplify CLI isn't aware of these for some reason and requires a local profile to work. Fake it.
+    //         sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
+    //         sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
+    //         sh 'aws configure set default.region ${aws_region}'
+    //         // need to remove the local amplify code - nothing worked apart from removing this and then running pull in headless mode
+    //         sh 'rm -rf amplify'
+    //         // pull in headless mode to get the specific environment/project since just `amplify pull` or `amplify init` doesn't work in this context
+    //         sh '''
+    //           #!/bin/bash
+    //           set -e
+    //           IFS='|'
+
+    //           AWSCLOUDFORMATIONCONFIG='{ "configLevel":"project", "useProfile": true, "profileName":"default" }'
+
+    //           AMPLIFY='{ "appId":"dweogx47v4chu", "envName":"dev", "defaultEditor":"code" }'
+
+    //           PROVIDERS='{ "awscloudformation":$AWSCLOUDFORMATIONCONFIG }'
+
+    //           amplify pull --amplify $AMPLIFY --providers $PROVIDERS --yes
+    //         '''
+    //       }
+    //     }
+    //   }
+    // }
+    stage ('Angular build') {
+      steps {
+        sh 'node --max_old_space_size=8192 /usr/bin/npm run build:${environment}'
+      }
+    }
+    stage ('Copy Artifacts to S3') {
+      steps{
+        withAWS(credentials: env.aws_credential_id, region: env.aws_region) {
+          script {
+            s3Upload(file:'dist/nefco-extranet', bucket:"${s3_bucket}/dist", path:'nefco-extranet')
+          } 
+        }
+      }
+    }
+    stage ('Invalidate CloudFront Assets') {
+      steps{
+        withAWS(credentials: env.aws_credential_id, region: env.aws_region) {
+          script {
+            sh "aws cloudfront create-invalidation --distribution-id ${cloudfront_dist_id} --paths '/*'"
+          } 
+        }
+      }
+    }
+    stage ('GraphQL Build') {
+      steps {
+        sh 'npm --prefix api run build'
+      }
+    }
+    stage ('NestJS RestAPI Build') {
+      steps {
+        sh 'npm --prefix client_dashboard run build'
+      }
+    }
+    stage ('QB Connector Build') {
+      steps {
+        sh 'npm --prefix qb run build'
+      }
+    }
+    stage ('Docker Build') {
+      steps {
+        withAWS(credentials: env.aws_credential_id, region: env.aws_region) {
+          script {
+            docker.build("${ecr_uri}/${environment}-extranet-api:latest", "--build-arg environment=${_env} .")
+            docker.build("${ecr_uri}/${environment}-qb-connector:latest", "--build-arg environment=${_env} -f qb/Dockerfile ./qb")
+          } 
+        }
+      }
+    }
+    stage ('ECR Push & Deploy') {
+      steps {
+        withAWS(credentials: env.aws_credential_id, region: env.aws_region) {
+          script {
+            def login_cmd = sh(script:"aws ecr get-login --no-include-email --region ${env.aws_region}", returnStdout:true)
+
+            sh "${login_cmd}"
+            
+            sh "docker push ${ecr_uri}/${environment}-extranet-api:latest"
+            sh "docker push ${ecr_uri}/${environment}-qb-connector:latest"
+
+            sh "aws ecs update-service --cluster ${ecs_cluster} --service graphql --force-new-deployment --region ${env.aws_region}"
+            sh "aws ecs update-service --cluster ${ecs_cluster} --service qb-connector --force-new-deployment --region ${env.aws_region}"
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      script {
+        sh "docker system prune -f -a"
+      }    
+    }
+    success {
+      script {
+        slackSend tokenCredentialId: env.slack_credential_id, color: "good", message: ":fire: Deployment complete! :fire:", channel: env.slack_channel
+        if (env.environment != "prod") slackSend tokenCredentialId: env.slack_credential_id, color: "good", message: "URL: ${_deployUrl}", channel: env.slack_channel
+        if (_env == "dev") slackSend tokenCredentialId: env.slack_credential_id, color: "good", message: "Playground url: ${_playgroundUrl}", channel: env.slack_channel
+      }    
+    }
+    aborted {
+      script {
+        slackSend tokenCredentialId: env.slack_credential_id, color: "danger", message: "[CANCELED] Deployment aborted ... someone panicked!", channel: env.slack_channel
+      }    
+    }
+    failure {
+      script {
+        slackSend tokenCredentialId: env.slack_credential_id, color: "danger", message: "[FAIL] Deployment failed! Mike's fault.", channel: env.slack_channel
+      }    
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "monorepo": true,
+  "compilerOptions": {
+    "webPack": true,
+    "assets": [
+      { 
+        "include": "common/templates/*.mustache",
+        "watchAssets": true,
+        "outDir": "dist"
+      }
+    ]
+  }
+}
